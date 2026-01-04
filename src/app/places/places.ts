@@ -11,5 +11,8 @@ export class Places {
   places = input.required<Place[]>();
   selectPlace = output<Place>();
 
+  onSelectPlace(place: Place) {
+    this.selectPlace.emit(place);
+  }
   
 }
