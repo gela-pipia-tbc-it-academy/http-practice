@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { Place } from './places.model';
+import { Place } from '../../places.model';
 
 @Component({
   selector: 'app-places',
@@ -14,5 +14,4 @@ export class Places {
   onSelectPlace(place: Place) {
     this.selectPlace.emit(place);
   }
-  
 }
