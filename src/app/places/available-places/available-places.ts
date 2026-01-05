@@ -15,10 +15,12 @@ const BASE_URL = 'http://localhost:3000';
   styleUrl: './available-places.scss',
 })
 export class AvailablePlaces implements OnInit {
-  places = signal<Place[] | undefined>(undefined);
+  // places = signal<Place[] | undefined>(undefined);
 
   private destroyRef = inject(DestroyRef);
   private placesService = inject(PlacesService);
+
+  places = this.placesService.loadedPlaces;
 
   isFetching = signal(false);
   error = signal<string>('');
@@ -27,9 +29,6 @@ export class AvailablePlaces implements OnInit {
     this.isFetching.set(true);
     const subscription = this.placesService.loadAvailablePlaces()
       .subscribe({
-        next: (places) => {
-          this.places.set(places);
-        },
         error: (err: Error) => {
           this.error.set(err.message);
         },

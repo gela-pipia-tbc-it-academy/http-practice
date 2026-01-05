@@ -16,9 +16,11 @@ interface IResData {
   providedIn: 'root',
 })
 export class PlacesService {
+  private places = signal<Place[]>([]);
   private userPlaces = signal<Place[]>([]);
 
   loadedUserPlaces = this.userPlaces.asReadonly();
+  loadedPlaces = this.places.asReadonly();
 
   errorService = inject(ErrorService);
   httpClient = inject(HttpClient);
@@ -35,6 +37,8 @@ export class PlacesService {
             next: () => {
                 if(!this.userPlaces().some(userPlace => userPlace.id === place.id)) {
                     this.userPlaces.update(prev => [...prev, place]);
+                } else {
+                  this.errorService.showError("Place is already in user places.");
                 }
             }
         })
@@ -45,6 +49,12 @@ export class PlacesService {
     return this.fetchPlaces(
       'places',
       'Something went wrong fetching available places, Please try again later.'
+    ).pipe(
+      tap({
+        next: (places) => {
+          this.places.set(places);
+        }
+      })
     );
   }
 
