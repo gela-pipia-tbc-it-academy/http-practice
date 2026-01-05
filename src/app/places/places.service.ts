@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, map, tap, throwError } from 'rxjs';
 
 import { Place } from './places.model';
+import { ErrorService } from '../shared/error.service';
 
 const BASE_URL = 'http://localhost:3000';
 
@@ -19,6 +20,7 @@ export class PlacesService {
 
   loadedUserPlaces = this.userPlaces.asReadonly();
 
+  errorService = inject(ErrorService);
   httpClient = inject(HttpClient);
 
   addPlaceToUserPlaces(place: Place) {
@@ -26,7 +28,8 @@ export class PlacesService {
     .pipe(
         catchError((err) => {
             console.log(err);
-            return throwError(() => new Error("Something went wrong adding place to user places. try again later."));
+            this.errorService.showError("Something went wrong adding place to user places.");
+            return throwError(() => new Error("Something went wrong adding place to user places."));
         }),
         tap({
             next: () => {
