@@ -9,7 +9,7 @@
     
     @if(places()) {
         <app-places [places]="places()!" (selectPlace)="onSelectPlace($event)" />
-    } @else if(places()?.length === 0) {
+    } @else if(places().length === 0) {
         <p class="fallback-text">No places available.</p>
     }
 </app-places-container>

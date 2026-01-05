@@ -4,6 +4,7 @@ import { PlacesContainer } from '../shared/places-container/places-container';
 import { HttpClient } from '@angular/common/http';
 import { Places } from "../shared/places/places";
 import { PlacesService } from '../places.service';
+import { Place } from '../places.model';
 
 @Component({
   selector: 'app-user-places',
@@ -21,6 +22,10 @@ export class UserPlaces implements OnInit {
   placesService = inject(PlacesService);
 
   places = this.placesService.loadedUserPlaces;
+
+  onSelectPlace(place: Place) {
+    this.placesService.removePlaceFromUserPlaces(place).subscribe();
+  }
 
   ngOnInit(): void {
     this.isFetching.set(true);

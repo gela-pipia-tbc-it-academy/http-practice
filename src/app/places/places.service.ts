@@ -26,23 +26,32 @@ export class PlacesService {
   httpClient = inject(HttpClient);
 
   addPlaceToUserPlaces(place: Place) {
-    return this.httpClient.put<Place[]>(`${BASE_URL}/user-places`, { placeId: place.id })
-    .pipe(
-        catchError((err) => {
-            console.log(err);
-            this.errorService.showError("Something went wrong adding place to user places.");
-            return throwError(() => new Error("Something went wrong adding place to user places."));
-        }),
-        tap({
-            next: () => {
-                if(!this.userPlaces().some(userPlace => userPlace.id === place.id)) {
-                    this.userPlaces.update(prev => [...prev, place]);
-                } else {
-                  this.errorService.showError("Place is already in user places.");
-                }
-            }
-        })
-    )
+    return this.httpClient.put<Place[]>(`${BASE_URL}/user-places`, { placeId: place.id }).pipe(
+      catchError((err) => {
+        console.log(err);
+        this.errorService.showError('Something went wrong adding place to user places.');
+        return throwError(() => new Error('Something went wrong adding place to user places.'));
+      }),
+      tap({
+        next: () => {
+          if (!this.userPlaces().some((userPlace) => userPlace.id === place.id)) {
+            this.userPlaces.update((prev) => [...prev, place]);
+          } else {
+            this.errorService.showError('Place is already in user places.');
+          }
+        },
+      })
+    );
+  }
+
+  removePlaceFromUserPlaces(place: Place) {
+    return this.httpClient.delete(`${BASE_URL}/user-places/${place.id}`).pipe(
+      tap({
+        next: () => {
+          this.userPlaces.update((places) => places.filter((p) => p.id !== place.id));
+        },
+      })
+    );
   }
 
   loadAvailablePlaces() {
@@ -53,7 +62,7 @@ export class PlacesService {
       tap({
         next: (places) => {
           this.places.set(places);
-        }
+        },
       })
     );
   }
