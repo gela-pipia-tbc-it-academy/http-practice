@@ -36,7 +36,7 @@ export class UserPlaces implements OnInit {
     const subscription = this.placesService.loadUserPlaces()
       .subscribe({
         error: (err) => {
-          this.error.set(err);
+          this.error.set(err.message);
         },
         complete: () => {
           this.isFetching.set(false);
