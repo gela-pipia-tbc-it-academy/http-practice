@@ -46,6 +46,10 @@ export class PlacesService {
 
   removePlaceFromUserPlaces(place: Place) {
     return this.httpClient.delete(`${BASE_URL}/user-places/${place.id}`).pipe(
+      catchError(err => {
+        this.errorService.showError("Failed to remove place!");
+        return throwError(() => new Error("Failed to remove place!"));
+      }),
       tap({
         next: () => {
           this.userPlaces.update((places) => places.filter((p) => p.id !== place.id));

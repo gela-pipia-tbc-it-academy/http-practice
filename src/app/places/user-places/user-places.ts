@@ -23,8 +23,11 @@ export class UserPlaces implements OnInit {
 
   places = this.placesService.loadedUserPlaces;
 
-  onSelectPlace(place: Place) {
-    this.placesService.removePlaceFromUserPlaces(place).subscribe();
+  onRemovePlace(place: Place) {
+    const subscription = this.placesService.removePlaceFromUserPlaces(place).subscribe();
+    this.destroyRef.onDestroy(() => {
+      subscription.unsubscribe();
+    })
   }
 
   ngOnInit(): void {
